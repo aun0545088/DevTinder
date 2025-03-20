@@ -1,8 +1,11 @@
 const mongoose = require("mongoose")
+require('dotenv').config()
+
+const mongoUrl = process.env.mongoUrl
 
 const connectDB = async () => {
     await mongoose.connect(
-        "mongodb+srv://aun0545088:3XlICHulr6SVFGqc@nodelearning.ja6so.mongodb.net/DevTinder"
+        mongoUrl
     )
 }
 

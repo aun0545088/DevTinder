@@ -3,6 +3,8 @@ const connectDB = require("./config/database")
 const app = express()
 const cookieParser = require("cookie-parser")
 
+const port = process.env.port
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -18,8 +20,8 @@ app.use("/", requestRouter)
 connectDB()
     .then(() => {
         console.log("Database connection established.")
-        app.listen(7777, () => {
-            console.log("server is successfully listening on port 7777....")
+        app.listen(port, () => {
+            console.log(`server is successfully listening on port ${port}....`)
         })
     })
     .catch(() => {
