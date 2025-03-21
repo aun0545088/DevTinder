@@ -2,22 +2,25 @@ const express = require("express")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
-const validateSignUpData = require("../utils/validation")
+const { validateSignUpData } = require("../utils/validation")
 const User = require("../models/user")
 
 const authRouter = express.Router()
 
 authRouter.post('/signup', async (req, res) => {
-    console.log(req.body)
+    console.log(req.body, req.body.skills)
     //Validation of data
 
     try {
         validateSignUpData(req)
 
-        const { firstName, lastName, emailId, password } = req.body
+        const { firstName, lastName, emailId, password, skills } = req.body
+
+        const data = req.body.skills
+        data.map((el,index)=>console.log(index,el))
 
         //Encryption of password
-        const passwordHash = bcrypt.hash(password, 10)
+        const passwordHash = await bcrypt.hash(password, 10)
 
         const user = new User({
             firstName,
@@ -25,7 +28,10 @@ authRouter.post('/signup', async (req, res) => {
             emailId,
             password: passwordHash
         })
-
+        //for handling the skills bydefault it is not saving the arr of string always gives [], now this check solved this issue
+        if (Array.isArray(skills) && skills.length > 0) {
+            user.skills = skills;
+        }
         await user.save()
         res.send("User added successfully!")
     }
@@ -43,7 +49,7 @@ authRouter.post('/login', async (req, res) => {
         if (!user) {
             throw new Error("Invalid credentials.")
         }
-        const isPasswordValid = user.validatePassword(password)
+        const isPasswordValid = await user.validatePassword(password)
 
         if (isPasswordValid) {
 

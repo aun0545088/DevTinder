@@ -4,10 +4,10 @@ const User = require("../models/user")
 const userAuth = async (req, res, next) => {
     try {
         //Read the token from the req cookies
+        const { token } = req.cookies
         if (!token) {
             throw new Error("Token is not valid!")
         }
-        const { token } = req.cookies
         //Validate the token
         const decodedObj = await jwt.verify(token, "secretKey")
 
