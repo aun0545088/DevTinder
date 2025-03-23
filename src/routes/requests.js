@@ -17,6 +17,13 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
             return res.status(400).json({ message: `Invalid status type ${status}` })
         }
 
+        const toUser = await User.findById(toUserId)
+
+        //if user even exist in db for random user 
+        if (!toUser) {
+            return res.status(404).json({ message: "user not found" })
+        }
+
         // If there is an exisiting connectionRequest.
 
         const exisitingConnectionRequest = await ConnectionRequest.findOne({
@@ -26,12 +33,6 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
             ]
         })
 
-        const toUser = User.findById(toUserId)
-
-        //if user even exist in db for random user 
-        if (!toUser) {
-            return res.status(404).json({ message: "user not found" })
-        }
 
         if (exisitingConnectionRequest) {
             return res
@@ -49,8 +50,10 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
 
         const data = await connectionRequest.save()
 
+        // console.log(toUser)
+
         res.json({
-            message: `${req.user.firstName} is ${status} in ${toUser.firstName}`,
+            message: `${req.user.firstName} is ${status} in ${toUser?.firstName}`,
             data
         })
 
