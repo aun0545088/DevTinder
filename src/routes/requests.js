@@ -71,8 +71,8 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async (req, r
         if (!allowedStatus.includes(status)) {
             return res.status(400).json({ message: "status not allowed." })
         }
-
-        const connectionRequest = ConnectionRequest.findOne({
+        //check my req Id in db or not
+        const connectionRequest = await ConnectionRequest.findOne({
             _id: requestedId,
             toUserId: loggedInUSer._id,
             status: "interested"
@@ -89,7 +89,7 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async (req, r
         res.json({ message: `Connection request ${status}`, data })
 
     } catch (err) {
-
+        res.status(400).send(`ERROR: ${err.message}`)
     }
 })
 

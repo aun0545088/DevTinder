@@ -4,10 +4,12 @@ const connectionRequestSchema = new mongoose.Schema(
     {
         fromUserId: {
             type: mongoose.Schema.Types.ObjectId,
+            ref: "User",//reference to the user collections
             required: true
         },
         toUserId: {
             type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true
         },
         status: {
@@ -26,7 +28,7 @@ const connectionRequestSchema = new mongoose.Schema(
 
 //connectionRequest.find({fromUserId:1277888888,toUserId:1239999999})
 
-connectionRequestSchema.index({ fromUserId: 1, toUserId:1 })
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 })
 
 //calling this middleware to pre save
 connectionRequestSchema.pre("save", function (next) {
