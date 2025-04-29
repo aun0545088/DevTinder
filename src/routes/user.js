@@ -54,4 +54,15 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
     }
 })
 
+userRouter.get("/user/feed", userAuth, async (req, res) => {
+    try {
+        const loggedInUSer = req.user
+
+        //Find all the connections requests(sent + received)
+        const connectionRequests = await ConnectionRequest()
+    } catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+})
+
 module.exports = userRouter
